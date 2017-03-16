@@ -1,7 +1,7 @@
 #this is the main gui for the project
+import RPi.GPIO as GPIO
 import Tkinter
 import os
-from picamera import PiCamera
 from time import sleep
 import sys
 import csv
@@ -14,51 +14,10 @@ class simpleapp_tk(Tkinter.Tk):
 
     #get training data
     def OnButtonClick_newId(self):
-        self.labelVariable.set("Capturing training data")
-        camera = PiCamera()
-        camera.resolution=(320,240)
         arg=sys.argv[1]
-        for i in range(1,11):
-            path='/home/pi/Desktop/New/train/'
-            path=path+arg+'.'+str(i)+'.jpg'
-            camera.start_preview()
-            sleep(3)
-            camera.capture(path)
-            camera.stop_preview()
-        #check duplicate
-        find_id=0;
-        arg_new=arg.split('subject')
-        id_num=arg_new[1]
         name_new=sys.argv[2]
-        with open('table.csv','rb') as csvfile:
-            read=csv.reader(csvfile)
-            idnums=[]
-            names=[]
-            statuses=[]
-            row_num=0
-            for row in read:
-                idnum= row[0]
-                name=row[1]
-                status=row[2]
-                idnums.append(idnum)
-                names.append(name)
-                statuses.append(status)
-                row_num=row_num+1
-        data=id_num
-        data=str(data)
-        try:
-            find_id=idnums.index(data)
-            print 'Voter already registered'
-        except:
-            with open('table.csv','a') as f:
-                writer=csv.writer(f)
-                data=id_num,name_new,str(0)
-                writer.writerow(data)
-                f.close()
-                print 'new voter added with:'
-                print 'id ',id_num
-                print 'name ',name_new
-
+        data=arg+' '+name_new
+        os.system('python cap.py '+str(data))
     #training
     def OnButtonClick_train(self):
         self.labelVariable.set("Training...")
@@ -66,13 +25,8 @@ class simpleapp_tk(Tkinter.Tk):
 
     #capture image for identification
     def OnButtonClick_image(self):
-        self.labelVariable.set("Capturing image")
-        camera = PiCamera()
-        camera.resolution=(320,240)
-        camera.start_preview()
-        sleep(5)
-        camera.capture('/home/pi/Desktop/gui/detect/test.jpg')
-        camera.stop_preview()
+        os.system('python capd.py')
+        self.labelVariable.set(u"Voter image captured")
 
     #find from file
     def OnButtonClick_detect(self):
@@ -108,6 +62,13 @@ class simpleapp_tk(Tkinter.Tk):
 
 #main loop
 if __name__=="__main__":
+    
+    GPIO.setwarnings(False)
+    GPIO.setmode(GPIO.BOARD)
+    GPIO.setup(3,GPIO.IN,pull_up_down=GPIO.PUD_UP)
+    GPIO.setup(5,GPIO.OUT)
+    GPIO.output(5,0)
+
     app=simpleapp_tk(None)
     app.title('my application')
     app.mainloop()

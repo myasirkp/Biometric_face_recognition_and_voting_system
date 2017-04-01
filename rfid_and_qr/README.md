@@ -1,0 +1,1 @@
+This are the files for reading rfid using Raspberry Pi 3 and EM-18 RFID reader. Interfacing is done using UART and displays the contents in a gui, also generates a QR code for the total price. 

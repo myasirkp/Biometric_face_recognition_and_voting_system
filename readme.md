@@ -27,6 +27,7 @@ The code is in train.py
 Available in capture_detect.py
 
 4. Recognizing the person and searching and updating the file.
+
 The previously saved xml file is loaded and the most probable match is found.
 
 The code is recognize.py - for recognizing.
@@ -38,6 +39,8 @@ The files are:
  new.py - training the images and saving it to xml file.
  capd.py - capturing the image for detection.
  newd.py - recognizing and updating the database.
+
+The file I used to store info is table.csv
 
 I have encapsulated all the codes into a gui platform created with Tkinter, code in gui.py
 For any queries email to toyasirkp@gmail.com
